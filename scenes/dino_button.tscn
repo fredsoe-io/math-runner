@@ -10,6 +10,7 @@ shader = ExtResource("3_color")
 shader_parameter/hue_shift = 0.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dino"]
+resource_local_to_scene = true
 atlas = ExtResource("2_dino")
 region = Rect2(0, 0, 24, 24)
 
@@ -47,3 +48,9 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "+"
 horizontal_alignment = 1
+
+[node name="IdleTimer" type="Timer" parent="."]
+wait_time = 0.2
+autostart = true
+
+[connection signal="timeout" from="IdleTimer" to="." method="_on_idle_timer_timeout"]

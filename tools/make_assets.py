@@ -37,96 +37,109 @@ def scale(pixels, factor):
 # ---------------------------------------------------------------- the dino ---
 # Drawn as text, one character per pixel. The game recolors it with a shader,
 # so this red dino is the Addasaurus and the others are the same picture.
+# It is built from loose parts (head, body, arms, legs), so a frame of the
+# animation is just the same parts moved a pixel or two.
 
 SIZE = 24
 CLEAR = (0, 0, 0, 0)
 PALETTE = {
     ".": CLEAR,
-    "o": (52, 32, 46, 255),     # outline, pupil, mouth
+    "o": (30, 22, 34, 255),     # outline, pupil, mouth
     "b": (226, 88, 62, 255),    # body
-    "d": (170, 54, 58, 255),    # body in shade
-    "c": (255, 220, 164, 255),  # belly
-    "s": (255, 170, 60, 255),   # plates on the back
+    "d": (170, 54, 58, 255),    # darker spots, and the arm and leg on the far side
+    "c": (255, 222, 150, 255),  # belly
+    "y": (228, 168, 78, 255),   # belly in shade
     "w": (255, 255, 255, 255),  # eye
 }
 USED_PALETTE = {char: (CLEAR if char == "." else (46, 42, 50, 255)) for char in PALETTE}
 
-# Head, body and tail. The legs are drawn separately so they can move.
-UPPER = [
+HEAD = [
     "........................",
-    "........................",
-    "........................",
-    "........................",
-    ".............bbbbbbb....",
-    "............bbbbwobbd...",
-    "............bbbbbbbbb...",
-    "............bbbbboooo...",
-    "...........sbbbbbbb.....",
-    "............bbbbc.......",
-    "..........sbbbbbcc......",
-    "...........bbbbbccbb....",
-    ".b......sbbbbbbbcc......",
-    ".bbb..bbbbbbbbbbc.......",
-    "...bbbbbbbbbbbbb........",
-    ".....ddddbbbbbb.........",
+    ".............bbbbbb.....",
+    "...........bbbbbbbbbb...",
+    "..........bbbwobbbbbbb..",
+    "..........bbbwobbbbdbb..",
+    "..........bbbbbbbbbbbb..",
+    "..........bbbbboooooo...",
+    "...........bbbbbbbbb....",
+    "............bbbbbb......",
 ]
-HEAD_ROWS = range(4, 9)   # the rows of UPPER that make up the head
-HEAD_FIRST_COLUMN = 11
-LEG_ROW = 16              # first row of the legs when standing
-LEG_LENGTH = 4
-NEAR_LEG_X = 11           # hip position; dx moves a leg forwards or backwards
-FAR_LEG_X = 9
+BODY = [
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "............bbbbc.......",
+    "..........bbbbbccc......",
+    ".........bdbbbbccc......",
+    ".b......bbbbbbbcccc.....",
+    ".bb....bbbbdbbbcccc.....",
+    ".bbb..bbbbbbbbbcccy.....",
+    "..bbbbbdbbbbbbbccyy.....",
+    "...bbbbbbbbbbbbbyy......",
+    ".....dbbbbbbbbbb........",
+]
+# Arms and legs are lists of (x, y) pixels, counted from the shoulder or hip
+LEG = [(0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (0, 2), (1, 2), (0, 3), (1, 3), (2, 3), (3, 3)]
+LEG_LIFTED = [(0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (1, 2), (2, 2), (3, 2)]
+NEAR_ARM = [(0, 0), (1, 0), (2, 0), (2, 1)]
+FAR_ARM = [(0, 0), (1, 0), (1, 1)]
+NEAR_HIP = (11, 16)
+FAR_HIP = (8, 16)
+NEAR_SHOULDER = (17, 10)
+FAR_SHOULDER = (19, 12)
+
+
+def cells_from_rows(rows, dx=0, dy=0):
+    cells = {}
+    for y, row in enumerate(rows):
+        for x, char in enumerate(row):
+            if char != ".":
+                cells[(x + dx, y + dy)] = char
+    return cells
+
+
+def cells_from_points(points, origin, char, dx=0, dy=0):
+    return {(origin[0] + x + dx, origin[1] + y + dy): char for x, y in points}
+
+
+def stamp(grid, cells):
+    """Draws a part with its own dark outline, on top of what is already there."""
+    for (x, y) in cells:
+        for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
+            if (nx, ny) not in cells and 0 <= nx < SIZE and 0 <= ny < SIZE:
+                grid[ny][nx] = "o"
+    for (x, y), char in cells.items():
+        if 0 <= x < SIZE and 0 <= y < SIZE:
+            grid[y][x] = char
 
 
 def blank():
     return [["."] * SIZE for _ in range(SIZE)]
 
 
-def put(grid, x, y, char):
-    if 0 <= x < SIZE and 0 <= y < SIZE:
-        grid[y][x] = char
-
-
-def draw_leg(grid, x, char, lifted):
-    top = LEG_ROW - (1 if lifted else 0)
-    for row in range(top, top + LEG_LENGTH):
-        put(grid, x, row, char)
-        put(grid, x + 1, row, char)
-    put(grid, x + 2, top + LEG_LENGTH - 1, char)  # the foot points forwards
-
-
-def add_outline(grid):
-    result = [row[:] for row in grid]
-    for y in range(SIZE):
-        for x in range(SIZE):
-            if grid[y][x] != ".":
-                continue
-            for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
-                if 0 <= nx < SIZE and 0 <= ny < SIZE and grid[ny][nx] != ".":
-                    result[y][x] = "o"
-                    break
-    return result
-
-
-def dino_frame(bob=0, near=(2, False), far=(-2, False)):
-    """bob moves the body down. near and far are (dx, lifted) for each leg."""
+def dino_frame(bob=0, head=0, near_arm=0, far_arm=0, near_leg=(0, False), far_leg=(0, False)):
+    """bob moves everything but the legs down, head moves the head down on top
+    of that, the arms move up (negative) or down. A leg is (dx, lifted)."""
     grid = blank()
-    draw_leg(grid, FAR_LEG_X + far[0], "d", far[1])
-    draw_leg(grid, NEAR_LEG_X + near[0], "b", near[1])
-    for y, row in enumerate(UPPER):
-        for x, char in enumerate(row):
-            if char != ".":
-                put(grid, x, y + bob, char)
-    return add_outline(grid)
+    stamp(grid, cells_from_points(LEG_LIFTED if far_leg[1] else LEG, FAR_HIP, "d", far_leg[0]))
+    stamp(grid, cells_from_points(FAR_ARM, FAR_SHOULDER, "d", 0, bob + far_arm))
+    upper = cells_from_rows(BODY, 0, bob)
+    upper.update(cells_from_rows(HEAD, 0, bob + head))
+    stamp(grid, upper)
+    stamp(grid, cells_from_points(LEG_LIFTED if near_leg[1] else LEG, NEAR_HIP, "b", near_leg[0]))
+    stamp(grid, cells_from_points(NEAR_ARM, NEAR_SHOULDER, "b", 0, bob + near_arm))
+    return grid
 
 
 def head_frame():
     grid = blank()
-    for y in HEAD_ROWS:
-        for x in range(HEAD_FIRST_COLUMN, SIZE):
-            if UPPER[y][x] != ".":
-                put(grid, x - 4, y + 5, UPPER[y][x])  # roughly centered
-    return add_outline(grid)
+    stamp(grid, cells_from_rows(HEAD, -4, 7))  # roughly centered
+    return grid
 
 
 def to_pixels(grid, palette=PALETTE):
@@ -138,16 +151,23 @@ def side_by_side(frames):
 
 
 def make_dino():
-    idle = [dino_frame(), dino_frame(), dino_frame(bob=1), dino_frame(bob=1)]
-    run = [
-        dino_frame(0, (2, False), (-2, False)),
-        dino_frame(1, (1, False), (-1, False)),
-        dino_frame(0, (0, False), (0, True)),
-        dino_frame(0, (-2, False), (2, False)),
-        dino_frame(1, (-1, False), (1, False)),
-        dino_frame(0, (0, True), (0, False)),
+    # Idle: the hands move and the head bobs
+    idle = [
+        dino_frame(head=0, near_arm=0, far_arm=0),
+        dino_frame(head=0, near_arm=1, far_arm=0),
+        dino_frame(head=1, near_arm=1, far_arm=1),
+        dino_frame(head=1, near_arm=0, far_arm=1),
     ]
-    jump = dino_frame(-1, (-1, True), (-3, True))
+    run = [
+        dino_frame(0, 0, 0, 1, (2, False), (-2, False)),
+        dino_frame(1, 0, 0, 1, (1, False), (-1, False)),
+        dino_frame(0, 1, 1, 0, (0, False), (0, True)),
+        dino_frame(0, 0, 1, 0, (-2, False), (2, False)),
+        dino_frame(1, 0, 1, 0, (-1, False), (1, False)),
+        dino_frame(0, 1, 0, 1, (0, True), (0, False)),
+    ]
+    # Jump: arms up, legs pulled up and apart
+    jump = dino_frame(0, 0, -2, -1, (2, True), (-2, True))
     # Frame 0-3 idle, 4-9 running, 11 jumping (10 is a spare copy of the jump)
     save_png("assets/images/dino.png", side_by_side([to_pixels(f) for f in idle + run + [jump, jump]]))
 
