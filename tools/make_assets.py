@@ -56,25 +56,24 @@ UPPER = [
     "........................",
     "........................",
     "........................",
-    "............bbbbbbbb....",
-    "..........sbbbbbbbbbb...",
-    "...........bbbbbwobbd...",
-    "...........bbbbbwobbb...",
-    "...........bbbbbbbbbb...",
-    ".........s.bbbbbboooo...",
-    "..........bbbbbbbbbb....",
-    "..........bbbbbbccc.....",
-    ".......s.bbbbbbbcccc....",
-    "........bbbbbbbbccccbb..",
-    ".b...s.bbbbbbbbbcccc....",
-    ".bb...bbbbbbbbbbcccc....",
-    "..bbbbbbbbbbbbbbccc.....",
-    "...ddbbbbbbbbbbbb.......",
-    "......dddddddddd........",
+    "........................",
+    ".............bbbbbbb....",
+    "............bbbbwobbd...",
+    "............bbbbbbbbb...",
+    "............bbbbboooo...",
+    "...........sbbbbbbb.....",
+    "............bbbbc.......",
+    "..........sbbbbbcc......",
+    "...........bbbbbccbb....",
+    ".b......sbbbbbbbcc......",
+    ".bbb..bbbbbbbbbbc.......",
+    "...bbbbbbbbbbbbb........",
+    ".....ddddbbbbbb.........",
 ]
-HEAD_ROWS = range(3, 10)  # the rows of UPPER that make up the head
-HEAD_FIRST_COLUMN = 10
-LEG_ROW = 18              # first row of the legs when standing
+HEAD_ROWS = range(4, 9)   # the rows of UPPER that make up the head
+HEAD_FIRST_COLUMN = 11
+LEG_ROW = 16              # first row of the legs when standing
+LEG_LENGTH = 4
 NEAR_LEG_X = 11           # hip position; dx moves a leg forwards or backwards
 FAR_LEG_X = 9
 
@@ -90,10 +89,10 @@ def put(grid, x, y, char):
 
 def draw_leg(grid, x, char, lifted):
     top = LEG_ROW - (1 if lifted else 0)
-    for dx in (0, 1):
-        put(grid, x + dx, top, char)
-        put(grid, x + dx, top + 1, char)
-    put(grid, x + 2, top + 1, char)  # the foot points forwards
+    for row in range(top, top + LEG_LENGTH):
+        put(grid, x, row, char)
+        put(grid, x + 1, row, char)
+    put(grid, x + 2, top + LEG_LENGTH - 1, char)  # the foot points forwards
 
 
 def add_outline(grid):
