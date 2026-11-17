@@ -1,0 +1,76 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_menu"]
+[ext_resource type="PackedScene" path="res://scenes/dino_button.tscn" id="2_dino"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 80
+text = "Math Runner"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Pick your dino"
+horizontal_alignment = 1
+
+[node name="Dinos" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="Addasaurus" parent="MarginContainer/VBoxContainer/Dinos" instance=ExtResource("2_dino")]
+layout_mode = 2
+dino_name = "Addasaurus"
+symbol = "+"
+
+[node name="Subtractosaurus" parent="MarginContainer/VBoxContainer/Dinos" instance=ExtResource("2_dino")]
+layout_mode = 2
+problem_type = 1
+dino_name = "Subtractosaurus"
+symbol = "-"
+
+[node name="Multipliosaurus" parent="MarginContainer/VBoxContainer/Dinos" instance=ExtResource("2_dino")]
+layout_mode = 2
+problem_type = 2
+dino_name = "Multipliosaurus"
+symbol = "×"
+
+[node name="Divisoraptor" parent="MarginContainer/VBoxContainer/Dinos" instance=ExtResource("2_dino")]
+layout_mode = 2
+problem_type = 3
+dino_name = "Divisoraptor"
+symbol = "÷"
+
+[connection signal="dino_selected" from="MarginContainer/VBoxContainer/Dinos/Addasaurus" to="." method="_on_dino_selected"]
+[connection signal="dino_selected" from="MarginContainer/VBoxContainer/Dinos/Subtractosaurus" to="." method="_on_dino_selected"]
+[connection signal="dino_selected" from="MarginContainer/VBoxContainer/Dinos/Multipliosaurus" to="." method="_on_dino_selected"]
+[connection signal="dino_selected" from="MarginContainer/VBoxContainer/Dinos/Divisoraptor" to="." method="_on_dino_selected"]
