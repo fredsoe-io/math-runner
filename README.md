@@ -50,7 +50,8 @@ Math Runner combines quick arithmetic with platformer mechanics. Players must so
 ## Credits
 
 - Game inspired by Chrome's dinosaur game
-- The dino, the ground and the correct/wrong sounds are made for this game by `tools/make_assets.py`. The four dino colors are made in the game with a shader
+- The dino and the ground are made for this game by `tools/make_assets.py`. The four dino colors are made in the game with a shader
+- Correct and wrong answer sounds: recorded by Adam
 - Jump sound: recorded by Adam & Lilli for [Jumpy Boi](https://github.com/fredsoe-io/jumpy-boi)
 
 ## Version History
@@ -65,5 +66,5 @@ Math Runner combines quick arithmetic with platformer mechanics. Players must so
 
 ## License
 
-- The code and the generated art and sounds are released under the [MIT license](LICENSE).
-- The jump sound (`assets/sounds/enemy_jump.wav`) was recorded by Adam & Lilli. It belongs to them and is not licensed for reuse.
+- The code and the generated art are released under the [MIT license](LICENSE).
+- The sounds in `assets/sounds/` were recorded by Adam & Lilli. They belong to them and are not licensed for reuse.

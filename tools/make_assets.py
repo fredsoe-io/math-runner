@@ -1,13 +1,11 @@
-"""Generates the art and sounds for Math Runner: the dino, the life icons, the
-app icon, the ground and the correct/wrong sounds.
+"""Generates the art for Math Runner: the dino, the life icons, the app icon
+and the ground. The sounds are recordings and are not made here.
 
 Run it from the project folder with `python3 tools/make_assets.py`.
 It only needs Python 3, no extra packages.
 """
-import math
 import random
 import struct
-import wave
 import zlib
 
 
@@ -230,43 +228,7 @@ def make_ground():
     save_png("assets/images/ground.png", scale(rows, block))
 
 
-# -------------------------------------------------------------- the sounds ---
-# 44.1 kHz, mono, 16 bit.
-
-RATE = 44100
-SOFT_SQUARE = [(1, 1.0), (3, 0.33), (5, 0.2)]
-BUZZ = [(1, 1.0), (2, 0.5), (3, 0.33), (4, 0.25), (5, 0.2), (6, 0.17)]
-
-
-def tone(frequency, seconds, volume, decay, harmonics):
-    samples = []
-    for i in range(int(RATE * seconds)):
-        t = i / RATE
-        value = 0.0
-        for number, weight in harmonics:
-            value += weight * math.sin(2 * math.pi * frequency * number * t)
-        envelope = math.exp(-decay * t) * min(1.0, i / 60.0)  # short fade-in avoids a click
-        samples.append(value * envelope * volume)
-    return samples
-
-
-def save_wav(path, samples):
-    with wave.open(path, "wb") as wav:
-        wav.setnchannels(1)
-        wav.setsampwidth(2)
-        wav.setframerate(RATE)
-        wav.writeframes(b"".join(struct.pack("<h", int(max(-1.0, min(1.0, s)) * 32767)) for s in samples))
-
-
-def make_sounds():
-    # correct: a quick rising two-note chime (B5 -> E6), like picking up a coin
-    save_wav("assets/sounds/correct.wav", tone(987.77, 0.08, 0.3, 3, SOFT_SQUARE) + tone(1318.51, 0.4, 0.3, 9, SOFT_SQUARE))
-    # wrong: a low falling two-note buzz (G3 -> D3)
-    save_wav("assets/sounds/wrong.wav", tone(196.0, 0.16, 0.3, 2, BUZZ) + tone(146.83, 0.38, 0.3, 6, BUZZ))
-
-
 if __name__ == "__main__":
     make_dino()
     make_ground()
-    make_sounds()
     print("Assets written to assets/ and icon.png")
