@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dhn4evmd4ee48"]
+
+[ext_resource type="Script" path="res://scripts/global_config.gd" id="1_btofx"]
+
+[node name="GlobalConfig" type="Node"]
+script = ExtResource("1_btofx")

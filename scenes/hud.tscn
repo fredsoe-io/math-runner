@@ -1,0 +1,64 @@
+[gd_scene load_steps=3 format=3 uid="uid://wyouvx8xxjb2"]
+
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_6orqn"]
+[ext_resource type="PackedScene" uid="uid://c07fyy1eyw2vr" path="res://scenes/healthbar.tscn" id="2_m2yp0"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_6orqn")
+
+[node name="Score" type="Label" parent="."]
+offset_left = 622.0
+offset_top = 8.0
+offset_right = 951.0
+offset_bottom = 91.0
+theme_override_font_sizes/font_size = 60
+text = "Score: 0"
+
+[node name="Healthbar" parent="." instance=ExtResource("2_m2yp0")]
+
+[node name="GameOverScreen" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 960.0
+offset_bottom = 540.0
+mouse_filter = 2
+
+[node name="Overlay" type="ColorRect" parent="GameOverScreen"]
+layout_mode = 0
+offset_right = 960.0
+offset_bottom = 540.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.156863)
+
+[node name="GameOverLabel" type="Label" parent="GameOverScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 80
+text = "Game Over!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HintLabel" type="Label" parent="GameOverScreen"]
+layout_mode = 0
+offset_top = 314.0
+offset_right = 960.0
+offset_bottom = 356.0
+theme_override_font_sizes/font_size = 28
+text = "Jump to try again"
+horizontal_alignment = 1
+
+[node name="MenuButton" type="Button" parent="GameOverScreen"]
+layout_mode = 0
+offset_left = 350.0
+offset_top = 366.0
+offset_right = 610.0
+offset_bottom = 414.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 24
+text = "Pick another dino"
+
+[connection signal="pressed" from="GameOverScreen/MenuButton" to="." method="_on_menu_button_pressed"]

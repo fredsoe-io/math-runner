@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/dino_button.gd" id="1_dino"]
+[ext_resource type="Texture2D" uid="uid://sdxgc5i8ykx7" path="res://assets/images/dino.png" id="2_dino"]
+[ext_resource type="Shader" path="res://assets/shaders/dino_color.gdshader" id="3_color"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dino"]
+resource_local_to_scene = true
+shader = ExtResource("3_color")
+shader_parameter/hue_shift = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dino"]
+atlas = ExtResource("2_dino")
+region = Rect2(0, 0, 24, 24)
+
+[node name="DinoButton" type="Button"]
+custom_minimum_size = Vector2(190, 230)
+script = ExtResource("1_dino")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="Dino" type="TextureRect" parent="VBoxContainer"]
+material = SubResource("ShaderMaterial_dino")
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_dino")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Addasaurus"
+horizontal_alignment = 1
+
+[node name="SymbolLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "+"
+horizontal_alignment = 1
