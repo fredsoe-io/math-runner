@@ -68,6 +68,10 @@ func report_score(correct: bool, value: int):
 
 func check_game_over() -> void:
 	if lives <= 0:
+		# The last wrong answer has just started the wrong sound. Stop it, so
+		# the two recordings don't play on top of each other
+		$Player/IncorrectSound.stop()
+		$Player/GameOverSound.play()
 		$HUD.show_game_over(true)
 		# Free all existing problems from the scene
 		for problem in problems:

@@ -54,13 +54,14 @@ Math Runner combines quick arithmetic with platformer mechanics. Players must so
 - The knight: "Camelot" by [analogStudios_](https://analogstudios.itch.io/camelot), CC0, as repackaged in [Brackeys' Platformer Bundle](https://brackeysgames.itch.io/brackeys-platformer-bundle). It is the same knight as in [Jumpy Boi](https://github.com/fredsoe-io/jumpy-boi). The four knight colors are made in the game with a shader
 - The weapons, the ground and the app icon are made for this game by `tools/make_assets.py`
 - Correct and wrong answer sounds: recorded by Adam
-- Jump sound: recorded by Adam & Lilli for [Jumpy Boi](https://github.com/fredsoe-io/jumpy-boi)
+- Jump and game over sounds: recorded by Adam & Lilli for [Jumpy Boi](https://github.com/fredsoe-io/jumpy-boi) (the game over sound is the knight's death sound there)
 
 ## Version History
 
 - 0.3
   - The dinos are now knights, each with its own weapon: sword, spear, mace and axe
   - The knight swings its weapon at the answer it runs into
+  - A game over sound, from Jumpy Boi
 - 0.2
   - Main menu with four dinos: plus, minus, multiply and divide
   - The correct answer explodes when you pick it
