@@ -9,3 +9,7 @@ build/*
 
 # macOS
 .DS_Store
+
+# The scoreboard key, written by tools/export_web.sh from $SCOREBOARD_KEY.
+# It goes into the web build but never into git.
+secrets/
