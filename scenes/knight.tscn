@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/knight.gd" id="1_knight"]
 [ext_resource type="Texture2D" path="res://assets/images/knight.png" id="2_knight"]
-[ext_resource type="Shader" path="res://assets/shaders/dino_color.gdshader" id="3_color"]
+[ext_resource type="Shader" path="res://assets/shaders/knight_color.gdshader" id="3_color"]
 [ext_resource type="PackedScene" path="res://scenes/weapon.tscn" id="4_weapon"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_color"]

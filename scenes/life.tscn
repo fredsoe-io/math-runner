@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" path="res://scripts/life.gd" id="1_e51jr"]
 [ext_resource type="Texture2D" path="res://assets/images/knight.png" id="2_knight"]
-[ext_resource type="Shader" path="res://assets/shaders/dino_color.gdshader" id="3_color"]
+[ext_resource type="Shader" path="res://assets/shaders/knight_color.gdshader" id="3_color"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_dino"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_color"]
 shader = ExtResource("3_color")
 shader_parameter/hue_shift = 0.0
 
@@ -14,7 +14,7 @@ anchors_preset = 0
 script = ExtResource("1_e51jr")
 
 [node name="Full" type="Sprite2D" parent="."]
-material = SubResource("ShaderMaterial_dino")
+material = SubResource("ShaderMaterial_color")
 texture = ExtResource("2_knight")
 centered = false
 region_enabled = true
@@ -22,7 +22,7 @@ region_rect = Rect2(35, 4, 24, 24)
 
 [node name="Used" type="Sprite2D" parent="."]
 self_modulate = Color(0.25, 0.23, 0.27, 1)
-material = SubResource("ShaderMaterial_dino")
+material = SubResource("ShaderMaterial_color")
 texture = ExtResource("2_knight")
 centered = false
 region_enabled = true

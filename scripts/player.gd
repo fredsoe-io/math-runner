@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 func _ready() -> void:
 	# The knight's color and weapon go with the problem type picked in the main menu
-	$Knight.hue_shift = GlobalConfig.get_dino_hue_shift()
+	$Knight.hue_shift = GlobalConfig.get_knight_hue_shift()
 	$Knight.weapon = GlobalConfig.get_weapon()
 
 ## Hits the answer the player just ran into

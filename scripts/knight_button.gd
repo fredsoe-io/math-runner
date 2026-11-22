@@ -1,20 +1,20 @@
 extends Button
 ## A knight you can pick in the main menu. There is one for each problem type.
 
-signal dino_selected(problem_type: Constants.ProblemType)
+signal knight_selected(problem_type: Constants.ProblemType)
 
 @export var problem_type: Constants.ProblemType
-@export var dino_name: String
+@export var knight_name: String
 @export var symbol: String
 
 func _ready() -> void:
-	$VBoxContainer/NameLabel.text = dino_name
+	$VBoxContainer/NameLabel.text = knight_name
 	$VBoxContainer/SymbolLabel.text = symbol
-	$VBoxContainer/KnightSlot/Knight.hue_shift = GlobalConfig.get_dino_hue_shift(problem_type)
+	$VBoxContainer/KnightSlot/Knight.hue_shift = GlobalConfig.get_knight_hue_shift(problem_type)
 	$VBoxContainer/KnightSlot/Knight.weapon = GlobalConfig.get_weapon(problem_type)
 
 func _pressed() -> void:
-	dino_selected.emit(problem_type)
+	knight_selected.emit(problem_type)
 
 # Connected to mouse_entered and focus_entered: show off the weapon
 func _on_hovered() -> void:

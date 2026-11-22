@@ -10,7 +10,7 @@ var show_full_on_ready: bool = true
 func _ready():
 	# Same color as the knight. Full and Used share one material; Used is
 	# the same picture, darkened by its self_modulate
-	$Full.material.set_shader_parameter("hue_shift", GlobalConfig.get_dino_hue_shift())
+	$Full.material.set_shader_parameter("hue_shift", GlobalConfig.get_knight_hue_shift())
 
 	if show_full_on_ready:
 		show_full_life()

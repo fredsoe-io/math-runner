@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_menu"]
-[ext_resource type="PackedScene" path="res://scenes/dino_button.tscn" id="2_dino"]
+[ext_resource type="PackedScene" path="res://scenes/knight_button.tscn" id="2_button"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -41,36 +41,36 @@ theme_override_font_sizes/font_size = 30
 text = "Pick your knight"
 horizontal_alignment = 1
 
-[node name="Dinos" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="Knights" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 1
 
-[node name="Addasaurus" parent="MarginContainer/VBoxContainer/Dinos" instance=ExtResource("2_dino")]
+[node name="SirAddalot" parent="MarginContainer/VBoxContainer/Knights" instance=ExtResource("2_button")]
 layout_mode = 2
-dino_name = "Sir Addalot"
+knight_name = "Sir Addalot"
 symbol = "+"
 
-[node name="Subtractosaurus" parent="MarginContainer/VBoxContainer/Dinos" instance=ExtResource("2_dino")]
+[node name="SirMinusalot" parent="MarginContainer/VBoxContainer/Knights" instance=ExtResource("2_button")]
 layout_mode = 2
 problem_type = 1
-dino_name = "Sir Minusalot"
+knight_name = "Sir Minusalot"
 symbol = "-"
 
-[node name="Multipliosaurus" parent="MarginContainer/VBoxContainer/Dinos" instance=ExtResource("2_dino")]
+[node name="SirTimesalot" parent="MarginContainer/VBoxContainer/Knights" instance=ExtResource("2_button")]
 layout_mode = 2
 problem_type = 2
-dino_name = "Sir Timesalot"
+knight_name = "Sir Timesalot"
 symbol = "×"
 
-[node name="Divisoraptor" parent="MarginContainer/VBoxContainer/Dinos" instance=ExtResource("2_dino")]
+[node name="SirDividealot" parent="MarginContainer/VBoxContainer/Knights" instance=ExtResource("2_button")]
 layout_mode = 2
 problem_type = 3
-dino_name = "Sir Dividealot"
+knight_name = "Sir Dividealot"
 symbol = "÷"
 
-[connection signal="dino_selected" from="MarginContainer/VBoxContainer/Dinos/Addasaurus" to="." method="_on_dino_selected"]
-[connection signal="dino_selected" from="MarginContainer/VBoxContainer/Dinos/Subtractosaurus" to="." method="_on_dino_selected"]
-[connection signal="dino_selected" from="MarginContainer/VBoxContainer/Dinos/Multipliosaurus" to="." method="_on_dino_selected"]
-[connection signal="dino_selected" from="MarginContainer/VBoxContainer/Dinos/Divisoraptor" to="." method="_on_dino_selected"]
+[connection signal="knight_selected" from="MarginContainer/VBoxContainer/Knights/SirAddalot" to="." method="_on_knight_selected"]
+[connection signal="knight_selected" from="MarginContainer/VBoxContainer/Knights/SirMinusalot" to="." method="_on_knight_selected"]
+[connection signal="knight_selected" from="MarginContainer/VBoxContainer/Knights/SirTimesalot" to="." method="_on_knight_selected"]
+[connection signal="knight_selected" from="MarginContainer/VBoxContainer/Knights/SirDividealot" to="." method="_on_knight_selected"]

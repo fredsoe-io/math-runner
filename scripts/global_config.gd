@@ -18,8 +18,8 @@ var question_generator: QuestionGenerator # The one the game asks for questions
 
 # Knights
 # Each problem type has its own knight color and weapon. The color is the
-# hue_shift for dino_color.gdshader (0.0 = the original red knight)
-var dino_hue_shifts: Dictionary = {
+# hue_shift for knight_color.gdshader (0.0 = the original red knight)
+var knight_hue_shifts: Dictionary = {
 	Constants.ProblemType.ADDITION: 0.0,
 	Constants.ProblemType.SUBTRACTION: 0.6,
 	Constants.ProblemType.MULTIPLICATION: 0.3,
@@ -51,8 +51,8 @@ func set_problem_type(type: Constants.ProblemType) -> void:
 	problem_type = type
 	question_generator = create_question_generator(type)
 
-func get_dino_hue_shift(type: Constants.ProblemType = problem_type) -> float:
-	return dino_hue_shifts[type]
+func get_knight_hue_shift(type: Constants.ProblemType = problem_type) -> float:
+	return knight_hue_shifts[type]
 
 func get_weapon(type: Constants.ProblemType = problem_type) -> Weapon.Kind:
 	return weapons[type]

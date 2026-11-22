@@ -12,7 +12,7 @@ const BOB := {
 	&"jumping": [0],
 }
 
-## Turns the knight's colors around the color wheel, see dino_color.gdshader
+## Turns the knight's colors around the color wheel, see knight_color.gdshader
 @export_range(0.0, 1.0) var hue_shift: float = 0.0:
 	set(value):
 		hue_shift = value
