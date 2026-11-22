@@ -73,6 +73,8 @@ func check_game_over() -> void:
 		$Player/IncorrectSound.stop()
 		$Player/GameOverSound.play()
 		$HUD.show_game_over(true)
+		$HUD.set_save_allowed(int(score) > 0)
+		$ScoreboardClient.load_board()
 		# Free all existing problems from the scene
 		for problem in problems:
 			problem.queue_free()
@@ -88,6 +90,13 @@ func reset_game():
 	current_speed = GlobalConfig.initial_speed
 	$HUD.reset_lives()
 	$HUD.show_game_over(false)
+	# Each knight has its own board. The server starts the clock for this game now.
+	var board: String = GlobalConfig.get_scoreboard_board()
+	$HUD.set_board_title("Top 10 - %s" % board.capitalize())
+	$ScoreboardClient.start_run(board)
+
+func _on_save_requested(player_name: String) -> void:
+	$ScoreboardClient.submit(player_name, int(score))
 
 func manage_score(delta: float):
 	var speed_multiplier = max(

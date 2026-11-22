@@ -32,7 +32,20 @@ var weapons: Dictionary = {
 	Constants.ProblemType.DIVISION: Weapon.Kind.AXE,
 }
 
+# Scoreboard (github.com/fredsoe-io/scoreboard), one board per knight.
+# On the web the game uses the site it was loaded from. Set scoreboard_url to
+# e.g. "http://localhost:8000" to try it from the editor; empty = off there.
+var scoreboard_url: String = ""
+var scoreboard_boards: Dictionary = {
+	Constants.ProblemType.ADDITION: "addition",
+	Constants.ProblemType.SUBTRACTION: "subtraction",
+	Constants.ProblemType.MULTIPLICATION: "multiplication",
+	Constants.ProblemType.DIVISION: "division",
+}
+
 # Game balance
+# The scoreboard rejects scores higher than these rules allow for the time
+# played (games.py in the scoreboard repo), so update it when they change
 var initial_lives: int = 3
 var initial_speed: float = 300.0
 var max_speed: float = 1000.0
@@ -56,6 +69,9 @@ func get_knight_hue_shift(type: Constants.ProblemType = problem_type) -> float:
 
 func get_weapon(type: Constants.ProblemType = problem_type) -> Weapon.Kind:
 	return weapons[type]
+
+func get_scoreboard_board(type: Constants.ProblemType = problem_type) -> String:
+	return scoreboard_boards[type]
 
 func create_question_generator(type: Constants.ProblemType) -> QuestionGenerator:
 	var generator: QuestionGenerator
