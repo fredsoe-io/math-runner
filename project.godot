@@ -32,6 +32,10 @@ window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
 window/icon=""
 
+[gui]
+
+theme/custom_font="res://assets/fonts/PixelOperator8.ttf"
+
 [input]
 
 Jump={

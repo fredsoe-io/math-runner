@@ -29,7 +29,7 @@ scale = Vector2(5, 5)
 
 [node name="NameLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 16
 text = "Sir Addalot"
 horizontal_alignment = 1
 
