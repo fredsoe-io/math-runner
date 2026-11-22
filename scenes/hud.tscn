@@ -59,6 +59,6 @@ offset_right = 610.0
 offset_bottom = 414.0
 focus_mode = 0
 theme_override_font_sizes/font_size = 24
-text = "Pick another dino"
+text = "Pick another knight"
 
 [connection signal="pressed" from="GameOverScreen/MenuButton" to="." method="_on_menu_button_pressed"]

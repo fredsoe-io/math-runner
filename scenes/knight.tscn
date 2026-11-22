@@ -1,0 +1,194 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/knight.gd" id="1_knight"]
+[ext_resource type="Texture2D" path="res://assets/images/knight.png" id="2_knight"]
+[ext_resource type="Shader" path="res://assets/shaders/dino_color.gdshader" id="3_color"]
+[ext_resource type="PackedScene" path="res://scenes/weapon.tscn" id="4_weapon"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_color"]
+resource_local_to_scene = true
+shader = ExtResource("3_color")
+shader_parameter/hue_shift = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_0"]
+atlas = ExtResource("2_knight")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_1"]
+atlas = ExtResource("2_knight")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_2"]
+atlas = ExtResource("2_knight")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_3"]
+atlas = ExtResource("2_knight")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jumping_0"]
+atlas = ExtResource("2_knight")
+region = Rect2(128, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_0"]
+atlas = ExtResource("2_knight")
+region = Rect2(0, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_1"]
+atlas = ExtResource("2_knight")
+region = Rect2(32, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_2"]
+atlas = ExtResource("2_knight")
+region = Rect2(64, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_3"]
+atlas = ExtResource("2_knight")
+region = Rect2(96, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_4"]
+atlas = ExtResource("2_knight")
+region = Rect2(128, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_5"]
+atlas = ExtResource("2_knight")
+region = Rect2(160, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_6"]
+atlas = ExtResource("2_knight")
+region = Rect2(192, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_7"]
+atlas = ExtResource("2_knight")
+region = Rect2(224, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_8"]
+atlas = ExtResource("2_knight")
+region = Rect2(0, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_9"]
+atlas = ExtResource("2_knight")
+region = Rect2(32, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_10"]
+atlas = ExtResource("2_knight")
+region = Rect2(64, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_11"]
+atlas = ExtResource("2_knight")
+region = Rect2(96, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_12"]
+atlas = ExtResource("2_knight")
+region = Rect2(128, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_13"]
+atlas = ExtResource("2_knight")
+region = Rect2(160, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_14"]
+atlas = ExtResource("2_knight")
+region = Rect2(192, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_running_15"]
+atlas = ExtResource("2_knight")
+region = Rect2(224, 96, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_knight"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_3")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jumping_0")
+}],
+"loop": true,
+"name": &"jumping",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_9")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_11")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_12")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_13")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_14")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_running_15")
+}],
+"loop": true,
+"name": &"running",
+"speed": 14.0
+}]
+
+[node name="Knight" type="Node2D"]
+script = ExtResource("1_knight")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_color")
+sprite_frames = SubResource("SpriteFrames_knight")
+animation = &"idle"
+autoplay = "idle"
+offset = Vector2(0, -3)
+
+[node name="Hand" type="Node2D" parent="."]
+position = Vector2(6, 4)
+
+[node name="Weapon" parent="Hand" instance=ExtResource("4_weapon")]
+
+[connection signal="animation_changed" from="AnimatedSprite2D" to="." method="_move_hand"]
+[connection signal="frame_changed" from="AnimatedSprite2D" to="." method="_move_hand"]

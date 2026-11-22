@@ -16,14 +16,20 @@ var number_range_max: int = 10
 var avoid_negative_numbers: bool = true
 var question_generator: QuestionGenerator # The one the game asks for questions
 
-# Dinos
-# Each problem type has its own dino color. The value is the hue_shift for
-# dino_color.gdshader (0.0 = the original red dino)
+# Knights
+# Each problem type has its own knight color and weapon. The color is the
+# hue_shift for dino_color.gdshader (0.0 = the original red knight)
 var dino_hue_shifts: Dictionary = {
 	Constants.ProblemType.ADDITION: 0.0,
 	Constants.ProblemType.SUBTRACTION: 0.6,
 	Constants.ProblemType.MULTIPLICATION: 0.3,
 	Constants.ProblemType.DIVISION: 0.8,
+}
+var weapons: Dictionary = {
+	Constants.ProblemType.ADDITION: Weapon.Kind.SWORD,
+	Constants.ProblemType.SUBTRACTION: Weapon.Kind.SPEAR,
+	Constants.ProblemType.MULTIPLICATION: Weapon.Kind.MACE,
+	Constants.ProblemType.DIVISION: Weapon.Kind.AXE,
 }
 
 # Game balance
@@ -47,6 +53,9 @@ func set_problem_type(type: Constants.ProblemType) -> void:
 
 func get_dino_hue_shift(type: Constants.ProblemType = problem_type) -> float:
 	return dino_hue_shifts[type]
+
+func get_weapon(type: Constants.ProblemType = problem_type) -> Weapon.Kind:
+	return weapons[type]
 
 func create_question_generator(type: Constants.ProblemType) -> QuestionGenerator:
 	var generator: QuestionGenerator

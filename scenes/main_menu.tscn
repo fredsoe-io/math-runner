@@ -38,7 +38,7 @@ horizontal_alignment = 1
 [node name="Subtitle" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-text = "Pick your dino"
+text = "Pick your knight"
 horizontal_alignment = 1
 
 [node name="Dinos" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
@@ -49,25 +49,25 @@ alignment = 1
 
 [node name="Addasaurus" parent="MarginContainer/VBoxContainer/Dinos" instance=ExtResource("2_dino")]
 layout_mode = 2
-dino_name = "Addasaurus"
+dino_name = "Sir Addalot"
 symbol = "+"
 
 [node name="Subtractosaurus" parent="MarginContainer/VBoxContainer/Dinos" instance=ExtResource("2_dino")]
 layout_mode = 2
 problem_type = 1
-dino_name = "Subtractosaurus"
+dino_name = "Sir Minusalot"
 symbol = "-"
 
 [node name="Multipliosaurus" parent="MarginContainer/VBoxContainer/Dinos" instance=ExtResource("2_dino")]
 layout_mode = 2
 problem_type = 2
-dino_name = "Multipliosaurus"
+dino_name = "Sir Timesalot"
 symbol = "×"
 
 [node name="Divisoraptor" parent="MarginContainer/VBoxContainer/Dinos" instance=ExtResource("2_dino")]
 layout_mode = 2
 problem_type = 3
-dino_name = "Divisoraptor"
+dino_name = "Sir Dividealot"
 symbol = "÷"
 
 [connection signal="dino_selected" from="MarginContainer/VBoxContainer/Dinos/Addasaurus" to="." method="_on_dino_selected"]

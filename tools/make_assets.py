@@ -1,5 +1,6 @@
-"""Generates the art for Math Runner: the dino, the life icons, the app icon
-and the ground. The sounds are recordings and are not made here.
+"""Generates the art for Math Runner: the weapons, the app icon and the ground.
+The knight (assets/images/knight.png) is from Jumpy Boi and is not made here,
+and the sounds are recordings.
 
 Run it from the project folder with `python3 tools/make_assets.py`.
 It only needs Python 3, no extra packages.
@@ -24,6 +25,45 @@ def save_png(path, pixels):
     open(path, "wb").write(png)
 
 
+def load_png(path):
+    """Reads an 8-bit RGBA PNG (the kind knight.png is) into rows of (r, g, b, a)."""
+    data = open(path, "rb").read()
+    pos, idat = 8, b""
+    while pos < len(data):
+        length = struct.unpack(">I", data[pos:pos + 4])[0]
+        kind, body = data[pos + 4:pos + 8], data[pos + 8:pos + 8 + length]
+        if kind == b"IHDR":
+            width, height, depth, color_type = struct.unpack(">IIBB", body[:10])
+            assert depth == 8 and color_type == 6, "only 8-bit RGBA PNGs"
+        elif kind == b"IDAT":
+            idat += body
+        pos += 12 + length
+
+    # Each row starts with a byte that says which PNG filter to undo
+    raw, stride = zlib.decompress(idat), width * 4
+    rows, previous = [], bytearray(stride)
+    for y in range(height):
+        start = y * (stride + 1)
+        kind, line = raw[start], bytearray(raw[start + 1:start + 1 + stride])
+        for x in range(stride):
+            left = line[x - 4] if x >= 4 else 0
+            up = previous[x]
+            up_left = previous[x - 4] if x >= 4 else 0
+            if kind == 1:
+                line[x] = (line[x] + left) & 255
+            elif kind == 2:
+                line[x] = (line[x] + up) & 255
+            elif kind == 3:
+                line[x] = (line[x] + (left + up) // 2) & 255
+            elif kind == 4:
+                guess = left + up - up_left
+                distances = [abs(guess - left), abs(guess - up), abs(guess - up_left)]
+                line[x] = (line[x] + (left, up, up_left)[distances.index(min(distances))]) & 255
+        rows.append([tuple(line[x:x + 4]) for x in range(0, stride, 4)])
+        previous = line
+    return rows
+
+
 def scale(pixels, factor):
     out = []
     for row in pixels:
@@ -32,155 +72,180 @@ def scale(pixels, factor):
     return out
 
 
-# ---------------------------------------------------------------- the dino ---
-# Drawn as text, one character per pixel. The game recolors it with a shader,
-# so this red dino is the Addasaurus and the others are the same picture.
-# It is built from loose parts (head, body, arms, legs), so a frame of the
-# animation is just the same parts moved a pixel or two.
-
-SIZE = 24
-CLEAR = (0, 0, 0, 0)
-PALETTE = {
-    ".": CLEAR,
-    "o": (30, 22, 34, 255),     # outline, pupil, mouth
-    "b": (226, 88, 62, 255),    # body
-    "d": (170, 54, 58, 255),    # darker spots, and the arm and leg on the far side
-    "c": (255, 222, 150, 255),  # belly
-    "y": (228, 168, 78, 255),   # belly in shade
-    "w": (255, 255, 255, 255),  # eye
-}
-USED_PALETTE = {char: (CLEAR if char == "." else (46, 42, 50, 255)) for char in PALETTE}
-
-HEAD = [
-    "........................",
-    ".............bbbbbb.....",
-    "...........bbbbbbbbbb...",
-    "..........bbbwobbbbbbb..",
-    "..........bbbwobbbbdbb..",
-    "..........bbbbbbbbbbbb..",
-    "..........bbbbboooooo...",
-    "...........bbbbbbbbb....",
-    "............bbbbbb......",
-]
-BODY = [
-    "........................",
-    "........................",
-    "........................",
-    "........................",
-    "........................",
-    "........................",
-    "........................",
-    "........................",
-    "............bbbbc.......",
-    "..........bbbbbccc......",
-    ".........bdbbbbccc......",
-    ".b......bbbbbbbcccc.....",
-    ".bb....bbbbdbbbcccc.....",
-    ".bbb..bbbbbbbbbcccy.....",
-    "..bbbbbdbbbbbbbccyy.....",
-    "...bbbbbbbbbbbbbyy......",
-    ".....dbbbbbbbbbb........",
-]
-# Arms and legs are lists of (x, y) pixels, counted from the shoulder or hip
-LEG = [(0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (0, 2), (1, 2), (0, 3), (1, 3), (2, 3), (3, 3)]
-LEG_LIFTED = [(0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (1, 2), (2, 2), (3, 2)]
-NEAR_ARM = [(0, 0), (1, 0), (2, 0), (2, 1)]
-FAR_ARM = [(0, 0), (1, 0), (1, 1)]
-NEAR_HIP = (11, 16)
-FAR_HIP = (8, 16)
-NEAR_SHOULDER = (17, 10)
-FAR_SHOULDER = (19, 12)
-
-
-def cells_from_rows(rows, dx=0, dy=0):
-    cells = {}
-    for y, row in enumerate(rows):
-        for x, char in enumerate(row):
-            if char != ".":
-                cells[(x + dx, y + dy)] = char
-    return cells
-
-
-def cells_from_points(points, origin, char, dx=0, dy=0):
-    return {(origin[0] + x + dx, origin[1] + y + dy): char for x, y in points}
-
-
-def stamp(grid, cells):
-    """Draws a part with its own dark outline, on top of what is already there."""
-    for (x, y) in cells:
-        for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
-            if (nx, ny) not in cells and 0 <= nx < SIZE and 0 <= ny < SIZE:
-                grid[ny][nx] = "o"
-    for (x, y), char in cells.items():
-        if 0 <= x < SIZE and 0 <= y < SIZE:
-            grid[y][x] = char
-
-
-def blank():
-    return [["."] * SIZE for _ in range(SIZE)]
-
-
-def dino_frame(bob=0, head=0, near_arm=0, far_arm=0, near_leg=(0, False), far_leg=(0, False)):
-    """bob moves everything but the legs down, head moves the head down on top
-    of that, the arms move up (negative) or down. A leg is (dx, lifted)."""
-    grid = blank()
-    stamp(grid, cells_from_points(LEG_LIFTED if far_leg[1] else LEG, FAR_HIP, "d", far_leg[0]))
-    stamp(grid, cells_from_points(FAR_ARM, FAR_SHOULDER, "d", 0, bob + far_arm))
-    upper = cells_from_rows(BODY, 0, bob)
-    upper.update(cells_from_rows(HEAD, 0, bob + head))
-    stamp(grid, upper)
-    stamp(grid, cells_from_points(LEG_LIFTED if near_leg[1] else LEG, NEAR_HIP, "b", near_leg[0]))
-    stamp(grid, cells_from_points(NEAR_ARM, NEAR_SHOULDER, "b", 0, bob + near_arm))
-    return grid
-
-
-def head_frame():
-    grid = blank()
-    stamp(grid, cells_from_rows(HEAD, -4, 7))  # roughly centered
-    return grid
-
-
-def to_pixels(grid, palette=PALETTE):
-    return [[palette[char] for char in row] for row in grid]
-
-
 def side_by_side(frames):
     return [sum((frame[y] for frame in frames), []) for y in range(len(frames[0]))]
 
 
-def make_dino():
-    # Idle: the hands move and the head bobs
-    idle = [
-        dino_frame(head=0, near_arm=0, far_arm=0),
-        dino_frame(head=0, near_arm=1, far_arm=0),
-        dino_frame(head=1, near_arm=1, far_arm=1),
-        dino_frame(head=1, near_arm=0, far_arm=1),
-    ]
-    run = [
-        dino_frame(0, 0, 0, 1, (2, False), (-2, False)),
-        dino_frame(1, 0, 0, 1, (1, False), (-1, False)),
-        dino_frame(0, 1, 1, 0, (0, False), (0, True)),
-        dino_frame(0, 0, 1, 0, (-2, False), (2, False)),
-        dino_frame(1, 0, 1, 0, (-1, False), (1, False)),
-        dino_frame(0, 1, 0, 1, (0, True), (0, False)),
-    ]
-    # Jump: arms up, legs pulled up and apart
-    jump = dino_frame(0, 0, -2, -1, (2, True), (-2, True))
-    # Frame 0-3 idle, 4-9 running, 11 jumping (10 is a spare copy of the jump)
-    save_png("assets/images/dino.png", side_by_side([to_pixels(f) for f in idle + run + [jump, jump]]))
+# ------------------------------------------------------------- the weapons ---
+# One weapon per problem type, drawn in the knight's style: the same dark
+# outline and the same steel and gold colors. Each is drawn as text, one
+# character per pixel, standing straight up. The outline is added afterwards.
+# The game recolors the knight with a shader, but not the weapon.
 
-    # Frame 0 = a full life, frame 1 = a used life
-    head = head_frame()
-    save_png("assets/images/life.png", side_by_side([to_pixels(head), to_pixels(head, USED_PALETTE)]))
+CLEAR = (0, 0, 0, 0)
+OUTLINE = "o"
+PALETTE = {
+    ".": CLEAR,
+    "o": (14, 13, 14, 255),     # outline (the knight's)
+    "h": (234, 223, 209, 255),  # steel in the light (the knight's)
+    "s": (179, 170, 161, 255),  # steel (the knight's)
+    "d": (124, 119, 111, 255),  # steel in shade (the knight's)
+    "y": (235, 167, 36, 255),   # gold (the knight's)
+    "b": (150, 92, 54, 255),    # wood
+    "n": (98, 60, 42, 255),     # leather grip
+}
 
-    # The app icon: the dino on the grey of the game's background
+# The order is the frame order in weapons.png and must match Weapon.Kind in
+# scripts/weapon.gd. grip is the pixel the knight holds; the weapon turns around it.
+WEAPONS = [
+    {"name": "sword", "grip": (2, 10), "rows": [
+        "..s..",
+        ".hsd.",
+        ".hsd.",
+        ".hsd.",
+        ".hsd.",
+        ".hsd.",
+        ".hsd.",
+        ".hsd.",
+        "yyyyy",
+        "..n..",
+        "..n..",
+        "..y..",
+    ]},
+    {"name": "spear", "grip": (2, 17), "rows": [
+        "..h..",
+        ".hsd.",
+        ".hsd.",
+        ".hsd.",
+        "..s..",
+        ".yyy.",
+        "..b..",
+        "..b..",
+        "..b..",
+        "..b..",
+        "..b..",
+        "..b..",
+        "..b..",
+        "..b..",
+        "..b..",
+        "..b..",
+        "..n..",
+        "..n..",
+        "..b..",
+        "..b..",
+        "..b..",
+    ]},
+    {"name": "mace", "grip": (3, 15), "rows": [
+        ".s...s.",
+        "..hsd..",
+        ".hhssd.",
+        "shhssds",
+        ".hssdd.",
+        "..ddd..",
+        ".s.y.s.",
+        "...b...",
+        "...b...",
+        "...b...",
+        "...b...",
+        "...b...",
+        "...b...",
+        "...n...",
+        "...n...",
+        "...n...",
+        "...y...",
+    ]},
+    {"name": "axe", "grip": (0, 15), "rows": [
+        "b...h..",
+        "b..ssh.",
+        "bddsssh",
+        "bddsssh",
+        "bddsssh",
+        "b..ssh.",
+        "b...h..",
+        "b......",
+        "b......",
+        "b......",
+        "b......",
+        "b......",
+        "b......",
+        "n......",
+        "n......",
+        "n......",
+        "b......",
+    ]},
+]
+
+# Every weapon gets a frame this size, with its grip moved to WEAPON_GRIP.
+# Keep these in step with FRAME_SIZE and the offset in scenes/weapon.tscn.
+WEAPON_FRAME = (16, 24)
+WEAPON_GRIP = (6, 19)
+
+
+def outlined(rows):
+    """Puts the drawing on a grid that is 1 pixel bigger on every side, and
+    fills each empty pixel next to the drawing with the outline color."""
+    width, height = len(rows[0]) + 2, len(rows) + 2
+    grid = [["."] * width for _ in range(height)]
+    for y, row in enumerate(rows):
+        for x, char in enumerate(row):
+            grid[y + 1][x + 1] = char
+    for y in range(height):
+        for x in range(width):
+            if grid[y][x] != ".":
+                continue
+            for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
+                if 0 <= nx < width and 0 <= ny < height and grid[ny][nx] not in (".", OUTLINE):
+                    grid[y][x] = OUTLINE
+                    break
+    return grid
+
+
+def weapon_frame(weapon):
+    grid = outlined(weapon["rows"])
+    # +1 because outlined() added a pixel on the left and on the top
+    dx = WEAPON_GRIP[0] - (weapon["grip"][0] + 1)
+    dy = WEAPON_GRIP[1] - (weapon["grip"][1] + 1)
+    frame = [[CLEAR] * WEAPON_FRAME[0] for _ in range(WEAPON_FRAME[1])]
+    for y, row in enumerate(grid):
+        for x, char in enumerate(row):
+            if char != ".":
+                assert 0 <= x + dx < WEAPON_FRAME[0] and 0 <= y + dy < WEAPON_FRAME[1], weapon["name"] + " does not fit"
+                frame[y + dy][x + dx] = PALETTE[char]
+    return frame
+
+
+def make_weapons():
+    save_png("assets/images/weapons.png", side_by_side([weapon_frame(w) for w in WEAPONS]))
+
+
+# ---------------------------------------------------------------- the icon ---
+# The knight with its sword, on the grey of the game's background.
+
+KNIGHT_HAND = (22, 23)  # where the knight holds the weapon in its 32x32 frame
+
+
+def make_icon():
+    knight = [row[0:32] for row in load_png("assets/images/knight.png")[0:32]]  # first idle frame
+    sword = weapon_frame(WEAPONS[0])
+    picture = [[CLEAR] * 32 for _ in range(32)]
+    for layer, dx, dy in ((knight, 0, 0), (sword, KNIGHT_HAND[0] - WEAPON_GRIP[0], KNIGHT_HAND[1] - WEAPON_GRIP[1])):
+        for y, row in enumerate(layer):
+            for x, pixel in enumerate(row):
+                if pixel[3] == 255 and 0 <= x + dx < 32 and 0 <= y + dy < 32:
+                    picture[y + dy][x + dx] = pixel
+
+    # Cut away the empty border, then center the picture at 8x on a 192x192 icon
+    used = [(x, y) for y, row in enumerate(picture) for x, pixel in enumerate(row) if pixel[3]]
+    left, right = min(x for x, _ in used), max(x for x, _ in used)
+    top, bottom = min(y for _, y in used), max(y for _, y in used)
+    big = scale([row[left:right + 1] for row in picture[top:bottom + 1]], 8)
     grey = (77, 77, 77, 255)
-    big = scale(to_pixels(dino_frame()), 7)
     icon = [[grey] * 192 for _ in range(192)]
+    ox, oy = (192 - len(big[0])) // 2, (192 - len(big)) // 2
     for y, row in enumerate(big):
         for x, pixel in enumerate(row):
             if pixel[3]:
-                icon[y + 16][x + 12] = pixel
+                icon[y + oy][x + ox] = pixel
     save_png("icon.png", icon)
 
 
@@ -229,6 +294,7 @@ def make_ground():
 
 
 if __name__ == "__main__":
-    make_dino()
+    make_weapons()
+    make_icon()
     make_ground()
     print("Assets written to assets/ and icon.png")

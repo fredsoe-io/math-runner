@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cnv0p840b8wqu"
-path="res://.godot/imported/life.png-59e34bea0c893144a79222d20154264b.ctex"
+uid="uid://poqsrro8g6le"
+path="res://.godot/imported/weapons.png-90d6ba102f8d1873315dd4849c58b00c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/life.png"
-dest_files=["res://.godot/imported/life.png-59e34bea0c893144a79222d20154264b.ctex"]
+source_file="res://assets/images/weapons.png"
+dest_files=["res://.godot/imported/weapons.png-90d6ba102f8d1873315dd4849c58b00c.ctex"]
 
 [params]
 

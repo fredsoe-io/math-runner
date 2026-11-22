@@ -1,18 +1,7 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/dino_button.gd" id="1_dino"]
-[ext_resource type="Texture2D" uid="uid://sdxgc5i8ykx7" path="res://assets/images/dino.png" id="2_dino"]
-[ext_resource type="Shader" path="res://assets/shaders/dino_color.gdshader" id="3_color"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_dino"]
-resource_local_to_scene = true
-shader = ExtResource("3_color")
-shader_parameter/hue_shift = 0.0
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dino"]
-resource_local_to_scene = true
-atlas = ExtResource("2_dino")
-region = Rect2(0, 0, 24, 24)
+[ext_resource type="PackedScene" path="res://scenes/knight.tscn" id="2_knight"]
 
 [node name="DinoButton" type="Button"]
 custom_minimum_size = Vector2(190, 230)
@@ -28,19 +17,20 @@ grow_vertical = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="Dino" type="TextureRect" parent="VBoxContainer"]
-material = SubResource("ShaderMaterial_dino")
+[node name="KnightSlot" type="Control" parent="VBoxContainer"]
 custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
+size_flags_horizontal = 4
 mouse_filter = 2
-texture = SubResource("AtlasTexture_dino")
-expand_mode = 1
-stretch_mode = 5
+
+[node name="Knight" parent="VBoxContainer/KnightSlot" instance=ExtResource("2_knight")]
+position = Vector2(55, 72)
+scale = Vector2(5, 5)
 
 [node name="NameLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Addasaurus"
+text = "Sir Addalot"
 horizontal_alignment = 1
 
 [node name="SymbolLabel" type="Label" parent="VBoxContainer"]
@@ -49,8 +39,5 @@ theme_override_font_sizes/font_size = 48
 text = "+"
 horizontal_alignment = 1
 
-[node name="IdleTimer" type="Timer" parent="."]
-wait_time = 0.2
-autostart = true
-
-[connection signal="timeout" from="IdleTimer" to="." method="_on_idle_timer_timeout"]
+[connection signal="focus_entered" from="." to="." method="_on_hovered"]
+[connection signal="mouse_entered" from="." to="." method="_on_hovered"]
