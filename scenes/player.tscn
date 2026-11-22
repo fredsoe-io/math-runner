@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://de46ou468sl6h"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_gbc0b"]
-[ext_resource type="AudioStream" path="res://assets/sounds/enemy_jump.wav" id="2_dik04"]
 [ext_resource type="PackedScene" path="res://scenes/knight.tscn" id="3_knight"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rr5le"]
@@ -19,7 +18,3 @@ metadata/_edit_group_ = true
 [node name="RunCollision" type="CollisionShape2D" parent="."]
 position = Vector2(1, 0.5)
 shape = SubResource("RectangleShape2D_rr5le")
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_dik04")
-volume_db = -8.0

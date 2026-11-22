@@ -23,7 +23,6 @@ func _physics_process(delta: float) -> void:
 	if is_on_floor():
 		$Knight.play("running")
 		if Input.is_action_just_pressed("Jump"):
-			$AudioStreamPlayer.play()
 			velocity.y = GlobalConfig.jump_velocity
 			$Knight.play("jumping")
 	else:
