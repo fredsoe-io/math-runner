@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/weapon.gd" id="1_weapon"]
+[ext_resource type="Texture2D" path="res://assets/images/weapons.png" id="2_weapons"]
+
+[node name="Weapon" type="Sprite2D"]
+texture = ExtResource("2_weapons")
+centered = false
+offset = Vector2(-6, -19)
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 24)
+script = ExtResource("1_weapon")

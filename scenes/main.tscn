@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://wyouvx8xxjb2" path="res://scenes/hud.tscn" id="4_rrf1u"]
 [ext_resource type="AudioStream" path="res://assets/sounds/correct.wav" id="5_vbw3c"]
 [ext_resource type="AudioStream" path="res://assets/sounds/wrong.wav" id="6_si45b"]
+[ext_resource type="AudioStream" path="res://assets/sounds/death.wav" id="7_death"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_cuv8j")
@@ -24,6 +25,11 @@ stream = ExtResource("5_vbw3c")
 position = Vector2(-24, -80.4)
 scale = Vector2(0.2, 0.2)
 stream = ExtResource("6_si45b")
+
+[node name="GameOverSound" type="AudioStreamPlayer2D" parent="Player"]
+position = Vector2(-24, -80.4)
+scale = Vector2(0.2, 0.2)
+stream = ExtResource("7_death")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(480, 270)

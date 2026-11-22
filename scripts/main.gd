@@ -15,7 +15,7 @@ func _ready() -> void:
 	ground_width = $Ground/Sprite2D.texture.get_width()
 	last_ground_x = $Ground.position.x
 	
-	# The dino was picked in the main menu, so start running right away
+	# The knight was picked in the main menu, so start running right away
 	reset_game()
 	game_running = true
 
@@ -24,7 +24,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		go_to_menu()
 	elif event.is_action_pressed("Jump") and not game_running:
 		# Jump after a game over to try again. A click on a HUD button never
-		# gets here, so pressing "Pick another dino" does not restart the game
+		# gets here, so pressing "Pick another knight" does not restart the game
 		reset_game()
 		game_running = true
 
@@ -53,6 +53,7 @@ func _process(delta: float) -> void:
 	check_game_over()
 
 func report_score(correct: bool, value: int):
+	$Player.swing() # The knight hits the answer it ran into, right or wrong
 	if correct:
 		$Player/CorrectSound.play()
 		score += value
@@ -67,6 +68,10 @@ func report_score(correct: bool, value: int):
 
 func check_game_over() -> void:
 	if lives <= 0:
+		# The last wrong answer has just started the wrong sound. Stop it, so
+		# the two recordings don't play on top of each other
+		$Player/IncorrectSound.stop()
+		$Player/GameOverSound.play()
 		$HUD.show_game_over(true)
 		# Free all existing problems from the scene
 		for problem in problems:
