@@ -11,6 +11,7 @@ const NEW_SCORE_COLOR := Color.GOLD
 @onready var healthbar = $Healthbar
 
 var _saving := false
+var _board_name := ""
 
 func _ready() -> void:
 	$GameOverScreen.visible = false
@@ -46,12 +47,16 @@ func set_save_allowed(allowed: bool) -> void:
 	%SaveButton.disabled = not allowed
 	%NameEdit.editable = allowed
 
-func set_board_title(title: String) -> void:
-	%BoardTitle.text = title
+func set_board_name(board_name: String) -> void:
+	_board_name = board_name
+	%BoardTitle.text = "Top 10 - %s" % board_name
 
-## Shows the top of the board. new_rank > 0 means the player's score was just saved.
+## Shows part of the board: the top 10, or after saving the 10 entries around
+## the new score. new_rank > 0 means the player's score was just saved.
 func show_board(entries: Array, new_rank: int) -> void:
 	_clear_rows()
+	var is_top := entries.is_empty() or int(entries[0].rank) == 1
+	%BoardTitle.text = ("Top 10 - %s" if is_top else "Your place - %s") % _board_name
 	for entry in entries:
 		var color: Color = NEW_SCORE_COLOR if entry.get("is_new", false) else Color.WHITE
 		# JSON numbers arrive as floats, so make them whole numbers again

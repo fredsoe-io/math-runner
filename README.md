@@ -65,7 +65,7 @@ game started; see the scoreboard repo for how.
 - To answer equations:
   - Jump to select the top answer
   - Stay on the ground to select the bottom answer
-- After a game over, type your name and press "Save score" (or Enter) to put your score on your knight's top 10. The game remembers your name for next time
+- After a game over you see the top 10 for your knight. Type your name and press "Save score" (or Enter) to save your score; the board then shows where it landed, with the 5 scores above it and 4 below, even if that is number 623. The game remembers your name for next time
 - Jump to try again or press "Pick another knight". ESC also takes you back to the main menu
 - Score points by selecting correct answers
 - Game speeds up over time

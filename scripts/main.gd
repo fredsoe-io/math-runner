@@ -92,7 +92,7 @@ func reset_game():
 	$HUD.show_game_over(false)
 	# Each knight has its own board. The server starts the clock for this game now.
 	var board: String = GlobalConfig.get_scoreboard_board()
-	$HUD.set_board_title("Top 10 - %s" % board.capitalize())
+	$HUD.set_board_name(board.capitalize())
 	$ScoreboardClient.start_run(board)
 
 func _on_save_requested(player_name: String) -> void:

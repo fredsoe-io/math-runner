@@ -7,9 +7,10 @@ extends Node
 ## On the web it talks to the site the game was loaded from. Elsewhere (in the
 ## editor) it is off unless GlobalConfig.scoreboard_url is set.
 
-## The top of the board arrived. entries is an Array of Dictionaries with
-## rank, name, score and is_new. new_rank is the rank of the score just saved,
-## or 0 when nothing was saved.
+## Part of the board arrived: the top 10, or after saving the 10 entries
+## around the new score (5 above, 4 below). entries is an Array of Dictionaries
+## with rank, name, score and is_new. new_rank is the rank of the score just
+## saved, or 0 when nothing was saved.
 signal board_loaded(entries: Array, new_rank: int)
 ## Something went wrong; message is meant for the player
 signal failed(message: String)
