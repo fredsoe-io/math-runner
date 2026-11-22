@@ -76,6 +76,7 @@ game started; see the scoreboard repo for how.
 - Game inspired by Chrome's dinosaur game
 - The knight: "Camelot" by [analogStudios_](https://analogstudios.itch.io/camelot), CC0, as repackaged in [Brackeys' Platformer Bundle](https://brackeysgames.itch.io/brackeys-platformer-bundle). It is the same knight as in [Jumpy Boi](https://github.com/fredsoe-io/jumpy-boi). The four knight colors are made in the game with a shader
 - The weapons, the ground and the app icon are made for this game by `tools/make_assets.py`
+- Font: Pixel Operator 8 by Jayvee Enaguas (HarvettFox96), CC0 1.0 (it says so in the font file), the same font as in Jumpy Boi
 - Correct and wrong answer sounds: recorded by Adam
 - Game over sound: recorded by Adam & Lilli for [Jumpy Boi](https://github.com/fredsoe-io/jumpy-boi), where it is the knight's death sound
 
@@ -87,6 +88,7 @@ game started; see the scoreboard repo for how.
   - A game over sound, from Jumpy Boi
   - No jump sound any more: it was long and played over the right and wrong answer sounds
   - A scoreboard for each knight
+  - The pixel font from Jumpy Boi
 - 0.2
   - Main menu with four dinos: plus, minus, multiply and divide
   - The correct answer explodes when you pick it
@@ -98,5 +100,5 @@ game started; see the scoreboard repo for how.
 ## License
 
 - The code and the generated art are released under the [MIT license](LICENSE).
-- The knight sprite (`assets/images/knight.png`) is CC0, see Credits.
+- The knight sprite (`assets/images/knight.png`) and the font (`assets/fonts/PixelOperator8.ttf`) are CC0, see Credits.
 - The sounds in `assets/sounds/` were recorded by Adam & Lilli. They belong to them and are not licensed for reuse.

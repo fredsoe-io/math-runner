@@ -116,7 +116,7 @@ func _add_cell(text: String, color: Color, alignment: HorizontalAlignment, expan
 	var label := Label.new()
 	label.text = text
 	label.horizontal_alignment = alignment
-	label.add_theme_font_size_override("font_size", 19)
+	label.add_theme_font_size_override("font_size", 16)
 	label.add_theme_color_override("font_color", color)
 	if expand:
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
