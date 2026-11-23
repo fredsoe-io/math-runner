@@ -70,7 +70,23 @@ problem_type = 3
 knight_name = "Sir Dividealot"
 symbol = "÷"
 
+[node name="LanguageButton" type="Button" parent="."]
+unique_name_in_owner = true
+auto_translate_mode = 2
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -136.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 52.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 16
+text = "Dansk"
+
 [connection signal="knight_selected" from="MarginContainer/VBoxContainer/Knights/SirAddalot" to="." method="_on_knight_selected"]
 [connection signal="knight_selected" from="MarginContainer/VBoxContainer/Knights/SirMinusalot" to="." method="_on_knight_selected"]
 [connection signal="knight_selected" from="MarginContainer/VBoxContainer/Knights/SirTimesalot" to="." method="_on_knight_selected"]
 [connection signal="knight_selected" from="MarginContainer/VBoxContainer/Knights/SirDividealot" to="." method="_on_knight_selected"]
+[connection signal="pressed" from="LanguageButton" to="." method="_on_language_button_pressed"]

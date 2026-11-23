@@ -22,6 +22,7 @@ Math Runner combines quick arithmetic with platformer mechanics. Players must so
 - Four knights to pick from, one for each kind of problem: Sir Addalot (plus, sword), Sir Minusalot (minus, spear), Sir Timesalot (multiply, mace) and Sir Dividealot (divide, axe)
 - Your knight swings its weapon at the answer it runs into
 - A scoreboard for each knight: type your name after a game to save your score
+- In English and Danish: the game starts in the browser's language, and the button in the corner of the main menu switches
 - Endless runner gameplay
 - Score tracking
 
@@ -58,8 +59,18 @@ the `Web` preset packs into the build. A key inside a browser game is not
 really secret, so the API also checks every score against the time since the
 game started; see the scoreboard repo for how.
 
+### Translations
+
+The Danish text is in `translations/translations.csv`. The English text is the
+key, so English needs no column of its own. When Godot imports the project it
+turns the CSV into `translations/translations.da.translation`; commit that file
+too, because the game loads it before the first import has made it. Godot
+translates text in scenes by itself, and text set from code goes through
+`tr()`. The knights' names stay English on purpose.
+
 ### How to Play
 
+- "Dansk" / "English" in the top right corner of the main menu switches the language
 - Pick a knight in the main menu (click or tap it, or use the arrow keys and SPACE) - the game starts right away
 - SPACE, a mouse click or a tap on the screen makes your character jump
 - To answer equations:
@@ -89,6 +100,7 @@ game started; see the scoreboard repo for how.
   - No jump sound any more: it was long and played over the right and wrong answer sounds
   - A scoreboard for each knight
   - The pixel font from Jumpy Boi
+  - Danish, with a button in the main menu to switch language
 - 0.2
   - Main menu with four dinos: plus, minus, multiply and divide
   - The correct answer explodes when you pick it

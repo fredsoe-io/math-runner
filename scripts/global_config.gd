@@ -56,8 +56,40 @@ var score_per_second: float = 1.0
 # UI Settings
 var life_size: Vector2 = Vector2(24, 24)
 
+# Language
+# English or Danish. The Danish text is in translations/translations.csv, with
+# the English text as the key. The main menu has a button to switch; until the
+# player uses it, the game follows the browser's (or computer's) language.
+const LANGUAGES: Array[String] = ["en", "da"]
+var language: String = "en"
+
+# What the game remembers between visits: the name for the scoreboard and the
+# language
+const PLAYER_FILE := "user://player.cfg"
+
 func _ready() -> void:
 	question_generator = create_question_generator(problem_type)
+	set_language(load_player_setting("language", _system_language()), false)
+
+func set_language(new_language: String, remember := true) -> void:
+	language = new_language if new_language in LANGUAGES else "en"
+	TranslationServer.set_locale(language)
+	if remember:
+		save_player_setting("language", language)
+
+func _system_language() -> String:
+	return "da" if OS.get_locale_language() == "da" else "en"
+
+func load_player_setting(key: String, default: Variant) -> Variant:
+	var config := ConfigFile.new()
+	config.load(PLAYER_FILE) # No file yet just gives the default
+	return config.get_value("player", key, default)
+
+func save_player_setting(key: String, value: Variant) -> void:
+	var config := ConfigFile.new()
+	config.load(PLAYER_FILE) # Keep the other settings
+	config.set_value("player", key, value)
+	config.save(PLAYER_FILE)
 
 func set_problem_type(type: Constants.ProblemType) -> void:
 	print("Setting problem type to: ", type)
