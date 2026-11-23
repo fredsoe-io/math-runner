@@ -11,6 +11,8 @@ tap the screen on an iPad or phone).
 
 ![After a game: the top 10 for your knight, with your saved score in gold](docs/scoreboard.png)
 
+![The same screen in Danish, after saving a score at number 16](docs/danish.png)
+
 ## Description
 
 Math Runner combines quick arithmetic with platformer mechanics. Players must solve simple arithmetic problems (plus, minus, multiply or divide) while running and jumping, creating an exciting blend of mental and reflexive challenges. The game progressively gets faster, testing both your mathematical ability and timing skills.
