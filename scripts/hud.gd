@@ -4,8 +4,6 @@ signal menu_requested
 ## The player pressed Save (or Enter) with this name
 signal save_requested(player_name: String)
 
-## The last name typed is remembered here for next time
-const PLAYER_FILE := "user://player.cfg"
 const NEW_SCORE_COLOR := Color.GOLD
 
 @onready var healthbar = $Healthbar
@@ -15,13 +13,14 @@ var _board_name := ""
 
 func _ready() -> void:
 	$GameOverScreen.visible = false
-	%NameEdit.text = _load_name()
+	# The last name typed is remembered for next time
+	%NameEdit.text = GlobalConfig.load_player_setting("name", "")
 
 func set_formular(formular: String):
 	$Formular.text = formular
 
 func set_score(score: int):
-	$Score.text = str("Score: ", score)
+	$Score.text = tr("Score: %d") % score
 
 func lose_life():
 	healthbar.lose_life()
@@ -37,7 +36,7 @@ func show_game_over(state: bool = true):
 	if state:
 		_saving = false
 		_clear_rows()
-		%StatusLabel.text = "Loading the scoreboard..."
+		%StatusLabel.text = tr("Loading the scoreboard...")
 		%SaveButton.disabled = false
 	else:
 		%NameEdit.release_focus()
@@ -49,14 +48,14 @@ func set_save_allowed(allowed: bool) -> void:
 
 func set_board_name(board_name: String) -> void:
 	_board_name = board_name
-	%BoardTitle.text = "Top 10 - %s" % board_name
+	%BoardTitle.text = tr("Top 10 - %s") % board_name
 
 ## Shows part of the board: the top 10, or after saving the 10 entries around
 ## the new score. new_rank > 0 means the player's score was just saved.
 func show_board(entries: Array, new_rank: int) -> void:
 	_clear_rows()
 	var is_top := entries.is_empty() or int(entries[0].rank) == 1
-	%BoardTitle.text = ("Top 10 - %s" if is_top else "Your place - %s") % _board_name
+	%BoardTitle.text = (tr("Top 10 - %s") if is_top else tr("Your place - %s")) % _board_name
 	for entry in entries:
 		var color: Color = NEW_SCORE_COLOR if entry.get("is_new", false) else Color.WHITE
 		# JSON numbers arrive as floats, so make them whole numbers again
@@ -67,9 +66,9 @@ func show_board(entries: Array, new_rank: int) -> void:
 	if new_rank > 0:
 		_saving = false
 		%SaveButton.disabled = true
-		%StatusLabel.text = "Saved! You are number %d" % new_rank
+		%StatusLabel.text = tr("Saved! You are number %d") % new_rank
 	elif entries.is_empty():
-		%StatusLabel.text = "No scores yet. Be the first!"
+		%StatusLabel.text = tr("No scores yet. Be the first!")
 	elif not _saving:
 		%StatusLabel.text = ""
 
@@ -83,13 +82,13 @@ func show_scoreboard_message(message: String) -> void:
 func _on_save_pressed() -> void:
 	var player_name: String = %NameEdit.text.strip_edges()
 	if player_name == "":
-		%StatusLabel.text = "Type your name first"
+		%StatusLabel.text = tr("Type your name first")
 		return
-	_save_name(player_name)
+	GlobalConfig.save_player_setting("name", player_name)
 	%NameEdit.release_focus()
 	_saving = true
 	%SaveButton.disabled = true
-	%StatusLabel.text = "Saving..."
+	%StatusLabel.text = tr("Saving...")
 	save_requested.emit(player_name)
 
 func _on_name_submitted(_text: String) -> void:
@@ -101,7 +100,7 @@ func _on_name_edit_focus_entered() -> void:
 	# so ask with the browser's own prompt instead
 	if OS.has_feature("web") and DisplayServer.is_touchscreen_available():
 		%NameEdit.release_focus()
-		var answer = JavaScriptBridge.eval("prompt('Your name', %s)" % JSON.stringify(%NameEdit.text))
+		var answer = JavaScriptBridge.eval("prompt(%s, %s)" % [JSON.stringify(tr("Your name")), JSON.stringify(%NameEdit.text)])
 		if answer is String:
 			%NameEdit.text = answer.strip_edges().left(%NameEdit.max_length)
 
@@ -115,20 +114,10 @@ func _clear_rows() -> void:
 func _add_cell(text: String, color: Color, alignment: HorizontalAlignment, expand := false) -> void:
 	var label := Label.new()
 	label.text = text
+	label.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED # A player called "Addition" stays that
 	label.horizontal_alignment = alignment
 	label.add_theme_font_size_override("font_size", 16)
 	label.add_theme_color_override("font_color", color)
 	if expand:
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	%Rows.add_child(label)
-
-func _load_name() -> String:
-	var config := ConfigFile.new()
-	if config.load(PLAYER_FILE) != OK:
-		return ""
-	return config.get_value("player", "name", "")
-
-func _save_name(player_name: String) -> void:
-	var config := ConfigFile.new()
-	config.set_value("player", "name", player_name)
-	config.save(PLAYER_FILE)

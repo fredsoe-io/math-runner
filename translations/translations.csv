@@ -1,0 +1,26 @@
+keys,da
+Pick your knight,Vælg din ridder
+Score: %d,Point: %d
+Game Over!,Spillet er slut!
+Jump to try again,Hop for at prøve igen
+Pick another knight,Vælg en anden ridder
+Top 10 - %s,Top 10 - %s
+Your place - %s,Din plads - %s
+Addition,Plus
+Subtraction,Minus
+Multiplication,Gange
+Division,Division
+Your name,Dit navn
+Save score,Gem point
+Loading the scoreboard...,Henter listen...
+No scores yet. Be the first!,Ingen endnu. Bliv den første!
+Type your name first,Skriv dit navn først
+Saving...,Gemmer...
+Saved! You are number %d,Gemt! Du er nummer %d
+The scoreboard is not available,Listen virker ikke lige nu
+This game could not be saved,Spillet kunne ikke gemmes
+That score could not be saved,Pointene kunne ikke gemmes
+This score is already saved,Pointene er allerede gemt
+Too late to save this score,Pointene kan ikke gemmes længere
+"Names can only have letters, numbers, spaces, - and _","Navne må kun have bogstaver, tal, mellemrum, - og _"
+"Too many games at once, wait a minute","For mange spil på én gang, vent et minut"

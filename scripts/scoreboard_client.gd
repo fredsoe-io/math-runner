@@ -54,10 +54,10 @@ func start_run(board: String) -> void:
 ## Saves the score of the current run and then emits board_loaded
 func submit(player_name: String, score: int) -> void:
 	if not is_enabled():
-		failed.emit("The scoreboard is not available")
+		failed.emit(tr("The scoreboard is not available"))
 		return
 	if _run_id == "":
-		failed.emit("This game could not be saved")
+		failed.emit(tr("This game could not be saved"))
 		return
 	var run_id := _run_id
 	var payload := {
@@ -77,7 +77,7 @@ func submit(player_name: String, score: int) -> void:
 ## Loads the top 10 of the current board and then emits board_loaded
 func load_board() -> void:
 	if not is_enabled():
-		failed.emit("The scoreboard is not available")
+		failed.emit(tr("The scoreboard is not available"))
 		return
 	var body = await _request(HTTPClient.METHOD_GET, "/%s/%s" % [GAME, _board])
 	if body != null:
@@ -94,14 +94,14 @@ func _request(method: HTTPClient.Method, path: String, payload = null) -> Varian
 	var error := http.request(_base_url + API_PATH + path, headers, method, data)
 	if error != OK:
 		http.queue_free()
-		failed.emit("The scoreboard is not available")
+		failed.emit(tr("The scoreboard is not available"))
 		return null
 
 	var response: Array = await http.request_completed # result, code, headers, body
 	http.queue_free()
 	var code: int = response[1]
 	if response[0] != HTTPRequest.RESULT_SUCCESS or code == 0:
-		failed.emit("The scoreboard is not available")
+		failed.emit(tr("The scoreboard is not available"))
 		return null
 	# JSON.new().parse() only returns an error code; JSON.parse_string() would
 	# also print one when a proxy answers with HTML
@@ -116,19 +116,19 @@ func _request(method: HTTPClient.Method, path: String, payload = null) -> Varian
 func _message_for(code: int, body) -> String:
 	match code:
 		403:
-			return "That score could not be saved" # bad signature
+			return tr("That score could not be saved") # bad signature
 		409:
-			return "This score is already saved"
+			return tr("This score is already saved")
 		410:
-			return "Too late to save this score"
+			return tr("Too late to save this score")
 		422:
 			# Usually a name with symbols in it. The server says what is wrong in "detail".
 			if body is Dictionary and body.get("detail") is Array:
-				return "Names can only have letters, numbers, spaces, - and _"
-			return "That score could not be saved"
+				return tr("Names can only have letters, numbers, spaces, - and _")
+			return tr("That score could not be saved")
 		429:
-			return "Too many games at once, wait a minute"
-	return "The scoreboard is not available"
+			return tr("Too many games at once, wait a minute")
+	return tr("The scoreboard is not available")
 
 
 func _sign(message: String) -> String:
